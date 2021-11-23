@@ -3,12 +3,12 @@
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
 PROJET_RA_5A/Library/
-PROJET_RA_5A//Temp/
-PROJET_RA_5A//Obj/
-PROJET_RA_5A//Build/
-PROJET_RA_5A//Builds/
-PROJET_RA_5A//Logs/
-PROJET_RA_5A//MemoryCaptures/
+PROJET_RA_5A/Temp/
+PROJET_RA_5A/Obj/
+PROJET_RA_5A/Build/
+PROJET_RA_5A/Builds/
+PROJET_RA_5A/Logs/
+PROJET_RA_5A/MemoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !PROJET_RA_5A/Assets/**/*.meta
