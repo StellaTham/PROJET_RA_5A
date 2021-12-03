@@ -18,12 +18,14 @@ public class PlayerController: MonoBehaviour
     private bool jumped = false;
     Rigidbody rigidbody;
     private float jumpAmount = 1f;
+    private GameObject camera;
 
 
 
     private void Start()
     {
         //controller = gameObject.AddComponent<CharacterController>();
+        camera = GameObject.Find("AR Camera");
         playerInput = GetComponent<PlayerInput>();
         rigidbody = GetComponent<Rigidbody>();
         
@@ -41,7 +43,18 @@ public class PlayerController: MonoBehaviour
 
         void Update()
     {
-        Debug.Log(groundedPlayer);
+        if(this.transform.position.y<0)
+        {
+            
+            rigidbody.isKinematic = true;
+            //Debug.Log(rigidbody.isKinematic);
+            this.transform.position = new Vector3(0, 0, 0);
+            this.transform.rotation = new Quaternion(0,0,0,0);
+            this.transform.position = new Vector3(0.05984f, 0.05916f, -0.05236f);
+            rigidbody.isKinematic = false;
+
+        }
+        //Debug.Log(groundedPlayer);
 
         /*groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
@@ -49,8 +62,9 @@ public class PlayerController: MonoBehaviour
             playerVelocity.y = 0f;
         }*/
         Vector2 input = playerInput.actions["Move"].ReadValue<Vector2>();
-        Debug.Log(input.x + ", " + input.y);
+        //Debug.Log(input.x + ", " + input.y);
         Vector3 move = new Vector3(input.x, 0, input.y);
+        move = move.x * camera.transform.right + move.z * camera.transform.forward;
         this.transform.Translate(move * Time.deltaTime * playerSpeed);
         
         /*controller.Move(move * Time.deltaTime * playerSpeed);
@@ -62,7 +76,7 @@ public class PlayerController: MonoBehaviour
 
         // Changes the height position of the player..
         float jumpInput = playerInput.actions["Jump"].ReadValue<float>();
-        Debug.Log(jumpInput);
+        //Debug.Log(jumpInput);
         
         if (jumpInput==1 && jumped==false) 
         {
