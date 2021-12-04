@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8946656757204772542}
   - component: {fileID: 7300588469020704583}
   m_Layer: 0
-  m_Name: ArrivalPoint
+  m_Name: ArrivalPointPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

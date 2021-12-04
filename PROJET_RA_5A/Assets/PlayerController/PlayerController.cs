@@ -115,7 +115,7 @@ public class PlayerController: MonoBehaviour
         }
         if (currentStage == 3)
         {
-            this.transform.position = new Vector3(0.05984f, 0.05916f, -0.05236f);
+            this.transform.position = new Vector3(0, 0.0541f, 0);
         }
 
         rigidbody.isKinematic = false;
