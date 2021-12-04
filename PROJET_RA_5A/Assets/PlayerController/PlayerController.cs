@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.SceneManagement;
 using static UnityEngine.InputSystem.HID.HID;
 
 public class PlayerController: MonoBehaviour
@@ -19,21 +20,62 @@ public class PlayerController: MonoBehaviour
     Rigidbody rigidbody;
     private float jumpAmount = 1f;
     private GameObject camera;
-
+    [SerializeField]
+    private GameObject wonPrefab;
+    private GameObject stage;
+    private GameObject player;
+    public int currentStage;
 
 
     private void Start()
     {
         //controller = gameObject.AddComponent<CharacterController>();
+        if (SceneManager.GetActiveScene().name== "stage1_Scene") {
+            currentStage = 1;
+            stage = GameObject.Find("Stage_1");
+        }
+        if (SceneManager.GetActiveScene().name == "stage2_Scene")
+        {
+            currentStage = 2;
+            stage = GameObject.Find("Stage_2");
+        }
+        if (SceneManager.GetActiveScene().name == "stage3_Scene")
+        {
+            currentStage = 3;
+            stage = GameObject.Find("Stage_3");
+        }
         camera = GameObject.Find("AR Camera");
         playerInput = GetComponent<PlayerInput>();
         rigidbody = GetComponent<Rigidbody>();
+        
+        player = GameObject.Find("Player");
         
     }
 
     void OnTriggerEnter(Collider collider) // le type de la variable est Collider
     {
-        groundedPlayer = true;
+        if(collider.gameObject.name=="ArrivalPoint")
+        {
+            
+            Transform currentTransform = collider.gameObject.transform;
+            Destroy(collider.gameObject);
+            
+            Instantiate(wonPrefab, currentTransform.position, Quaternion.identity);
+            
+            player.SetActive(false);
+            Destroy(stage);
+            Invoke("NextStage", 5);
+
+        }
+        if (collider.gameObject.name=="DeadEnd") 
+        {
+            Respawn();
+        }
+        else
+        {
+            groundedPlayer = true;
+        }
+        
     }
 
     void OnTriggerExit(Collider collider)
@@ -41,17 +83,49 @@ public class PlayerController: MonoBehaviour
         groundedPlayer = false;
     }
 
+    void NextStage() 
+    
+    {
+        
+        if (currentStage==1) 
+        {
+            
+            SceneManager.LoadScene("stage2_Scene");
+        }
+        if (currentStage == 2)
+        {
+            
+            SceneManager.LoadScene("stage3_Scene");
+        }
+    }
+
+    void Respawn() 
+    {
+        rigidbody.isKinematic = true;
+        //Debug.Log(rigidbody.isKinematic);
+        this.transform.position = new Vector3(0, 0, 0);
+        this.transform.rotation = new Quaternion(0, 0, 0, 0);
+        if (currentStage==1) 
+        {
+            this.transform.position = new Vector3(0.05984f, 0.05916f, -0.05236f);
+        }
+        if (currentStage == 2)
+        {
+            this.transform.position = new Vector3(0.06567f, 0.23833f, -0.052f);
+        }
+        if (currentStage == 3)
+        {
+            this.transform.position = new Vector3(0.05984f, 0.05916f, -0.05236f);
+        }
+
+        rigidbody.isKinematic = false;
+    }
         void Update()
     {
         if(this.transform.position.y<0)
         {
-            
-            rigidbody.isKinematic = true;
-            //Debug.Log(rigidbody.isKinematic);
-            this.transform.position = new Vector3(0, 0, 0);
-            this.transform.rotation = new Quaternion(0,0,0,0);
-            this.transform.position = new Vector3(0.05984f, 0.05916f, -0.05236f);
-            rigidbody.isKinematic = false;
+
+            Respawn();
 
         }
         //Debug.Log(groundedPlayer);
