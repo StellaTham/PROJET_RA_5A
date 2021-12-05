@@ -26,6 +26,19 @@ public class PlayerController: MonoBehaviour
     private GameObject player;
     public int currentStage;
 
+    #region "Stage3"
+    public List<int> buttonSequence;
+    private bool firstTimeTriggeredB1 = true;
+    private bool firstTimeTriggeredB2 = true;
+    private bool firstTimeTriggeredB3 = true;
+    private bool firstTimeTriggeredB4 = true;
+    private Animator Button1Animator;
+    private Animator Button2Animator;
+    private Animator Button3Animator;
+    private Animator Button4Animator;
+    [SerializeField]
+    private GameObject arrivalPointPrefab;
+    #endregion
 
     private void Start()
     {
@@ -67,9 +80,52 @@ public class PlayerController: MonoBehaviour
             Invoke("NextStage", 5);
 
         }
+
+        if (collider.gameObject.name == "ArrivalPointPhysic(Clone)")
+        {
+
+            Transform currentTransform = collider.gameObject.transform;
+            Destroy(collider.gameObject);
+
+            Instantiate(wonPrefab, currentTransform.position, Quaternion.identity);
+
+            player.SetActive(false);
+            //Destroy(stage);
+            //Invoke("NextStage", 5);
+
+        }
+
         if (collider.gameObject.name=="DeadEnd") 
         {
             Respawn();
+        }
+        if (collider.gameObject.name=="Button1" && firstTimeTriggeredB1)
+        {
+            buttonSequence.Add(1);
+            Button1Animator = collider.gameObject.GetComponent<Animator>();
+            Button1Animator.SetTrigger("Button1triggered");
+            firstTimeTriggeredB1 = false;
+        }
+        if (collider.gameObject.name == "Button2" && firstTimeTriggeredB2)
+        {
+            buttonSequence.Add(2);
+            Button2Animator = collider.gameObject.GetComponent<Animator>();
+            Button2Animator.SetTrigger("Button2triggered");
+            firstTimeTriggeredB2 = false;
+        }
+        if (collider.gameObject.name == "Button3" && firstTimeTriggeredB3)
+        {
+            buttonSequence.Add(3);
+            Button3Animator = collider.gameObject.GetComponent<Animator>();
+            Button3Animator.SetTrigger("Button3triggered");
+            firstTimeTriggeredB3 = false;
+        }
+        if (collider.gameObject.name == "Button4" && firstTimeTriggeredB4)
+        {
+            buttonSequence.Add(4);
+            Button4Animator = collider.gameObject.GetComponent<Animator>();
+            Button4Animator.SetTrigger("Button4triggered");
+            firstTimeTriggeredB4 = false;
         }
         else
         {
@@ -166,12 +222,39 @@ public class PlayerController: MonoBehaviour
         {
             jumped = false;
         }
+
         /*if (Input.GetButtonDown("Jump") && groundedPlayer)
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }*/
-        
+
         //this.transform.position.y += gravityValue * Time.deltaTime;
         //controller.Move(playerVelocity * Time.deltaTime);
+
+        if (buttonSequence.Count == 4)
+        {
+
+            if(buttonSequence[0] == 4 && buttonSequence[1] == 2 && buttonSequence[2] == 3 && buttonSequence[3] == 1)
+            {
+                buttonSequence.Clear();
+                GameObject bodySpawn = GameObject.Find("BodySpawnPosition");
+                Vector3 position = bodySpawn.transform.position;
+                position.y = 5;
+                Instantiate(arrivalPointPrefab, bodySpawn.transform.position, Quaternion.identity);
+            }
+            else
+            {
+                buttonSequence.Clear();
+                firstTimeTriggeredB1 = true;
+                firstTimeTriggeredB2 = true;
+                firstTimeTriggeredB3 = true;
+                firstTimeTriggeredB4 = true;
+                Button1Animator.SetTrigger("FalseSequence");
+                Button2Animator.SetTrigger("FalseSequence");
+                Button3Animator.SetTrigger("FalseSequence");
+                Button4Animator.SetTrigger("FalseSequence");
+            }
+        }
+
     }
 }
