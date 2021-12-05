@@ -11,7 +11,7 @@ public class PlayerController: MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
-    private float playerSpeed = 0.1f;
+    private float playerSpeed = 0.05f;
     private float jumpHeight = 0.01f;
     private float gravityValue = -9.81f;
     private PlayerInput playerInput;
@@ -25,19 +25,21 @@ public class PlayerController: MonoBehaviour
     private GameObject stage;
     private GameObject player;
     public int currentStage;
+    [SerializeField]
+    private AudioClip victorySong;
 
     #region "Stage3"
-    public List<int> buttonSequence;
-    private bool firstTimeTriggeredB1 = true;
+    public List<int> buttonSequence; // List used to keep the order in which the player pressed the buttons
+    private bool firstTimeTriggeredB1 = true;   // Booleans to only trigger the collider once
     private bool firstTimeTriggeredB2 = true;
     private bool firstTimeTriggeredB3 = true;
     private bool firstTimeTriggeredB4 = true;
-    private Animator Button1Animator;
+    private Animator Button1Animator;   // The animator compenent of each buttons
     private Animator Button2Animator;
     private Animator Button3Animator;
     private Animator Button4Animator;
     [SerializeField]
-    private GameObject arrivalPointPrefab;
+    private GameObject arrivalPointPrefab;  // Prefab to spawn when getting the correct button order
     #endregion
 
     private void Start()
@@ -45,17 +47,17 @@ public class PlayerController: MonoBehaviour
         //controller = gameObject.AddComponent<CharacterController>();
         if (SceneManager.GetActiveScene().name== "stage1_Scene") {
             currentStage = 1;
-            stage = GameObject.Find("Stage_1");
+            stage = GameObject.Find("Stage_1_Corrected");
         }
         if (SceneManager.GetActiveScene().name == "stage2_Scene")
         {
             currentStage = 2;
-            stage = GameObject.Find("Stage_2");
+            stage = GameObject.Find("Stage_2_Corrected");
         }
         if (SceneManager.GetActiveScene().name == "stage3_Scene")
         {
             currentStage = 3;
-            stage = GameObject.Find("Stage_3");
+            stage = GameObject.Find("Stage_3_Corrected");
         }
         camera = GameObject.Find("AR Camera");
         playerInput = GetComponent<PlayerInput>();
@@ -69,7 +71,12 @@ public class PlayerController: MonoBehaviour
     {
         if(collider.gameObject.name=="ArrivalPoint")
         {
-            
+
+            AudioSource audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
+            audioSource.Stop();
+            audioSource.clip = victorySong;
+            audioSource.Play();
+
             Transform currentTransform = collider.gameObject.transform;
             Destroy(collider.gameObject);
             
@@ -81,8 +88,14 @@ public class PlayerController: MonoBehaviour
 
         }
 
+        // We spawn the complete player body with the victory song without destroying the stage
         if (collider.gameObject.name == "ArrivalPointPhysic(Clone)")
         {
+
+            AudioSource audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
+            audioSource.Stop();
+            audioSource.clip = victorySong;
+            audioSource.Play();
 
             Transform currentTransform = collider.gameObject.transform;
             Destroy(collider.gameObject);
@@ -93,16 +106,18 @@ public class PlayerController: MonoBehaviour
             //Destroy(stage);
             //Invoke("NextStage", 5);
 
+
         }
 
         if (collider.gameObject.name=="DeadEnd") 
         {
             Respawn();
         }
+        // Condition true if we collide with a button and only once
         if (collider.gameObject.name=="Button1" && firstTimeTriggeredB1)
         {
-            buttonSequence.Add(1);
-            Button1Animator = collider.gameObject.GetComponent<Animator>();
+            buttonSequence.Add(1);  // We add to our list the number corresponding to the button pressed
+            Button1Animator = collider.gameObject.GetComponent<Animator>(); // We start the button pressed animation
             Button1Animator.SetTrigger("Button1triggered");
             firstTimeTriggeredB1 = false;
         }
@@ -231,19 +246,22 @@ public class PlayerController: MonoBehaviour
         //this.transform.position.y += gravityValue * Time.deltaTime;
         //controller.Move(playerVelocity * Time.deltaTime);
 
+        // Condition true if the player pressed the four buttons
         if (buttonSequence.Count == 4)
         {
-
+            // If the correct sequence was entered, 4-2-3-1, the condition is true 
             if(buttonSequence[0] == 4 && buttonSequence[1] == 2 && buttonSequence[2] == 3 && buttonSequence[3] == 1)
             {
-                buttonSequence.Clear();
-                GameObject bodySpawn = GameObject.Find("BodySpawnPosition");
+                buttonSequence.Clear(); // We clear the list
+                GameObject bodySpawn = GameObject.Find("BodySpawnPosition");    // We get the position where to spawn the Body and instantiate the body
                 Vector3 position = bodySpawn.transform.position;
-                position.y = 5;
+                position.y = 15;
                 Instantiate(arrivalPointPrefab, bodySpawn.transform.position, Quaternion.identity);
             }
             else
             {
+                // If the player got the sequence wrong we reset the bool value to only trigger the button once
+                // and play the animation to get the button at there starting position
                 buttonSequence.Clear();
                 firstTimeTriggeredB1 = true;
                 firstTimeTriggeredB2 = true;

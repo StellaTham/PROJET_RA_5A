@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5171767433280210061}
-  - component: {fileID: 2475280448652442155}
   - component: {fileID: 1233648887376873069}
   - component: {fileID: 4922663787695247306}
   - component: {fileID: 1554880122354516958}
@@ -28,27 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7073167553428339823}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.06677199, y: 0.06677199, z: 0.06677199}
+  m_LocalScale: {x: 0.02088628, y: 0.02088628, z: 0.02088628}
   m_Children:
   - {fileID: 4260096339500283406}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2475280448652442155
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7073167553428339823}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.6, y: 0.6, z: 0.6}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!54 &1233648887376873069
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -63,7 +49,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 3
 --- !u!65 &4922663787695247306
 BoxCollider:
@@ -91,6 +77,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wonPrefab: {fileID: 8352178770269752761, guid: 5a71610a4537be94881cd9e5931c170f,
+    type: 3}
+  currentStage: 0
+  victorySong: {fileID: 8300000, guid: b15cc955d1a272c4983b93fa6aa976cd, type: 3}
+  buttonSequence: 
+  arrivalPointPrefab: {fileID: 2936738838484224559, guid: e0f4efe67e3de2d43a67b59b1a745b00,
     type: 3}
 --- !u!114 &698391116984369810
 MonoBehaviour:
